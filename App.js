@@ -46,39 +46,35 @@ export default function App({}) {
     },
   });
 
-  const peerConnection = useRef(null);
-
-  useEffect(() => {
-    if (Platform.constants.Model === 'SM-G975F') {
-      peerConnection.current = new RTCPeerConnection({
-        iceServers: [
-          {
-            urls: 'stun:stun.relay.metered.ca:80',
-          },
-          {
-            urls: 'turn:a.relay.metered.ca:80',
-            username: 'a06fa94e47b5b576b7e2023d',
-            credential: 'kEj9B+JnstWL7jTI',
-          },
-          {
-            urls: 'turn:a.relay.metered.ca:80?transport=tcp',
-            username: 'a06fa94e47b5b576b7e2023d',
-            credential: 'kEj9B+JnstWL7jTI',
-          },
-          {
-            urls: 'turn:a.relay.metered.ca:443',
-            username: 'a06fa94e47b5b576b7e2023d',
-            credential: 'kEj9B+JnstWL7jTI',
-          },
-          {
-            urls: 'turn:a.relay.metered.ca:443?transport=tcp',
-            username: 'a06fa94e47b5b576b7e2023d',
-            credential: 'kEj9B+JnstWL7jTI',
-          },
-        ],
-      });
-    }
-  }, []);
+  const peerConnection = useRef(
+    new RTCPeerConnection({
+      iceServers: [
+        {
+          urls: 'stun:stun.relay.metered.ca:80',
+        },
+        {
+          urls: 'turn:a.relay.metered.ca:80',
+          username: '8c0ea84e9875bf637b95da2d',
+          credential: '5/PFNq4oWIIWGtdT',
+        },
+        {
+          urls: 'turn:a.relay.metered.ca:80?transport=tcp',
+          username: '8c0ea84e9875bf637b95da2d',
+          credential: '5/PFNq4oWIIWGtdT',
+        },
+        {
+          urls: 'turn:a.relay.metered.ca:443',
+          username: '8c0ea84e9875bf637b95da2d',
+          credential: '5/PFNq4oWIIWGtdT',
+        },
+        {
+          urls: 'turn:a.relay.metered.ca:443?transport=tcp',
+          username: '8c0ea84e9875bf637b95da2d',
+          credential: '5/PFNq4oWIIWGtdT',
+        },
+      ],
+    }),
+  );
 
   // useEffect(() => {
   //   (async () => {
