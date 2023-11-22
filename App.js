@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useRef} from 'react';
+import React, {useEffect, useState, useRef, useLayoutEffect} from 'react';
 import {
   Platform,
   KeyboardAvoidingView,
@@ -26,6 +26,8 @@ import VideoOff from './asset/VideoOff';
 import CameraSwitch from './asset/CameraSwitch';
 import IconContainer from './components/IconContainer';
 import InCallManager from 'react-native-incall-manager';
+import CryptoJS from 'crypto-js';
+
 // "react-native-webrtc": "^1.94.2",
 
 export default function App({}) {
@@ -46,55 +48,73 @@ export default function App({}) {
     },
   });
 
-  const peerConnection = useRef(
-    new RTCPeerConnection({
+  // const peerConnection = useRef(
+  //   new RTCPeerConnection({
+  //     iceServers: [
+  //       {
+  //         urls: 'stun:stun.relay.metered.ca:80',
+  //       },
+  //       {
+  //         urls: 'turn:a.relay.metered.ca:80',
+  //         username: '8c0ea84e9875bf637b95da2d',
+  //         credential: '5/PFNq4oWIIWGtdT',
+  //       },
+  //       {
+  //         urls: 'turn:a.relay.metered.ca:80?transport=tcp',
+  //         username: '8c0ea84e9875bf637b95da2d',
+  //         credential: '5/PFNq4oWIIWGtdT',
+  //       },
+  //       {
+  //         urls: 'turn:a.relay.metered.ca:443',
+  //         username: '8c0ea84e9875bf637b95da2d',
+  //         credential: '5/PFNq4oWIIWGtdT',
+  //       },
+  //       {
+  //         urls: 'turn:a.relay.metered.ca:443?transport=tcp',
+  //         username: '8c0ea84e9875bf637b95da2d',
+  //         credential: '5/PFNq4oWIIWGtdT',
+  //       },
+  //     ],
+  //   }),
+  // );
+
+  const peerConnection = useRef(null);
+
+  useLayoutEffect(() => {
+    // function generateTemporaryCredentials(userId, secret) {
+    //   const timestamp = Math.floor(Date.now() / 1000); // Получаем Unix timestamp
+    //   const username = `${timestamp}:${userId}`; // Формируем имя пользователя
+
+    //   // Создаем HMAC с использованием SHA-256
+    //   const password = CryptoJS.HmacSHA256(username, secret).toString(
+    //     CryptoJS.enc.Base64,
+    //   ); // Получаем пароль в формате base64
+
+    //   return {username, password};
+    // }
+    // // Пример использования
+    // const userId = 'exampleUserId';
+    // const secret = 'your_auth_secret'; // Замените на ваш static-auth-secret
+    // const credentials = generateTemporaryCredentials(userId, secret);
+
+    // console.log('Username:', credentials.username);
+    // console.log('Password:', credentials.password);
+
+    peerConnection.current = new RTCPeerConnection({
       iceServers: [
         {
-          urls: 'stun:stun.relay.metered.ca:80',
+          // urls: 'stun:oiweida.ru:3478',
+          urls: 'stun:stun.l.google.com:19302',
         },
         {
-          urls: 'turn:a.relay.metered.ca:80',
-          username: '8c0ea84e9875bf637b95da2d',
-          credential: '5/PFNq4oWIIWGtdT',
-        },
-        {
-          urls: 'turn:a.relay.metered.ca:80?transport=tcp',
-          username: '8c0ea84e9875bf637b95da2d',
-          credential: '5/PFNq4oWIIWGtdT',
-        },
-        {
-          urls: 'turn:a.relay.metered.ca:443',
-          username: '8c0ea84e9875bf637b95da2d',
-          credential: '5/PFNq4oWIIWGtdT',
-        },
-        {
-          urls: 'turn:a.relay.metered.ca:443?transport=tcp',
-          username: '8c0ea84e9875bf637b95da2d',
-          credential: '5/PFNq4oWIIWGtdT',
+          // urls: 'turn:oiweida.ru:3478',
+          urls: 'turn:89.221.60.157:3478',
+          username: 'username',
+          credential: 'password',
         },
       ],
-    }),
-  );
-
-  // useEffect(() => {
-  //   (async () => {
-  //     const response = await fetch(
-  //       'https://shopot.metered.live/api/v1/turn/credentials?apiKey=57d0e9aca701ef2934fd311a8a0d81450433',
-  //     );
-
-  //     // Saving the response in the iceServers array
-  //     const iceServers = await response.json();
-
-  //     // Using the iceServers array in the RTCPeerConnection method
-  //     peerConnection.current = new RTCPeerConnection({
-  //       iceServers: iceServers,
-  //     });
-
-  //     // console.log(peerConnection);
-
-  //     console.log('iceServers', peerConnection.current);
-  //   })();
-  // }, []);
+    });
+  }, []);
 
   const [localMicOn, setlocalMicOn] = useState(true);
 
@@ -111,41 +131,6 @@ export default function App({}) {
   //       },
   //       {
   //         urls: 'stun:stun2.l.google.com:19302',
-  //       },
-  //       // {
-  //       //   urls: 'relay1.expressturn.com:3478',
-  //       //   username: 'ef2CLM18CGVYI1RO3Z',
-  //       //   credential: 'hRZYdKpYXPIEzjc1',
-  //       // },
-  //       {
-  //         urls: 'turn:turn.anyfirewall.com:443?transport=tcp',
-  //         username: 'webrtc',
-  //         credential: 'webrtc',
-  //       },
-  //       {
-  //         url: 'turn:numb.viagenie.ca',
-  //         credential: 'muazkh',
-  //         username: 'webrtc@live.com',
-  //       },
-  //       {
-  //         url: 'turn:192.158.29.39:3478?transport=udp',
-  //         credential: 'JZEOEt2V3Qb0y27GRntt2u2PAYA=',
-  //         username: '28224511:1379330808',
-  //       },
-  //       {
-  //         url: 'turn:192.158.29.39:3478?transport=tcp',
-  //         credential: 'JZEOEt2V3Qb0y27GRntt2u2PAYA=',
-  //         username: '28224511:1379330808',
-  //       },
-  //       {
-  //         url: 'turn:turn.bistri.com:80',
-  //         credential: 'homeo',
-  //         username: 'homeo',
-  //       },
-  //       {
-  //         url: 'turn:turn.anyfirewall.com:443?transport=tcp',
-  //         credential: 'webrtc',
-  //         username: 'webrtc',
   //       },
   //     ],
   //   }),
@@ -190,6 +175,8 @@ export default function App({}) {
       });
     }
   }, [peerConnection.current, localStream]);
+
+  console.log('dadada', peerConnection.current);
 
   peerConnection.current?.addEventListener(
     'iceconnectionstatechange',
@@ -259,10 +246,6 @@ export default function App({}) {
             }),
           )
           .then(data => {
-            // console.log(
-            //   'peerConnection.current.iceConnectionState',
-            //   peerConnection.current.iceConnectionState,
-            // );
             console.log('SUCCESS');
           })
           .catch(err => {
@@ -274,27 +257,32 @@ export default function App({}) {
     let isFront = false;
 
     (async () => {
-      let mediaConstraints = {
-        audio: true,
-        video: {
-          frameRate: 30,
-          facingMode: 'user',
-        },
-      };
+      (async () => {
+        let mediaConstraints = {
+          audio: true,
+          video: true,
+          //  {
+          //   frameRate: 30,
+          //   facingMode: 'environment', // Изменено здесь
+          // },
+        };
 
-      let localMediaStream;
-      let isVoiceOnly = false;
+        let localMediaStream;
+        let isVoiceOnly = false;
 
-      try {
-        const mediaStream = await mediaDevices.getUserMedia(mediaConstraints);
+        try {
+          const mediaStream = await mediaDevices.getUserMedia(mediaConstraints);
 
-        if (isVoiceOnly) {
-          let videoTrack = await mediaStream.getVideoTracks()[0];
-          videoTrack.enabled = false;
+          // if (isVoiceOnly) {
+          //   let videoTrack = mediaStream.getVideoTracks()[0];
+          //   videoTrack.enabled = false;
+          // }
+
+          setlocalStream(mediaStream);
+        } catch (err) {
+          // Обработка ошибки
         }
-
-        setlocalStream(mediaStream);
-      } catch (err) {}
+      })();
     })();
 
     peerConnection.current?.addEventListener('addstream', event => {
@@ -621,7 +609,9 @@ export default function App({}) {
   }
 
   useEffect(() => {
-    console.log(callerId, peerConnection.current);
+    // console.log(callerId, peerConnection.current);
+
+    console.log('lflflflflflflf', remoteStream);
   }, []);
 
   const WebrtcRoomScreen = () => {
@@ -633,13 +623,13 @@ export default function App({}) {
           paddingHorizontal: 12,
           paddingVertical: 12,
         }}>
-        {localStream ? (
+        {/* {localStream ? (
           <RTCView
             objectFit={'cover'}
             style={{flex: 1, backgroundColor: '#050A0E'}}
             streamURL={localStream.toURL()}
           />
-        ) : null}
+        ) : null} */}
         {remoteStream ? (
           <RTCView
             objectFit={'cover'}
