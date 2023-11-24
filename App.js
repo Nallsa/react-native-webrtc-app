@@ -50,70 +50,67 @@ export default function App({}) {
 
   // const peerConnection = useRef(
   //   new RTCPeerConnection({
-  //     iceServers: [
-  //       {
-  //         urls: 'stun:stun.relay.metered.ca:80',
-  //       },
-  //       {
-  //         urls: 'turn:a.relay.metered.ca:80',
-  //         username: '8c0ea84e9875bf637b95da2d',
-  //         credential: '5/PFNq4oWIIWGtdT',
-  //       },
-  //       {
-  //         urls: 'turn:a.relay.metered.ca:80?transport=tcp',
-  //         username: '8c0ea84e9875bf637b95da2d',
-  //         credential: '5/PFNq4oWIIWGtdT',
-  //       },
-  //       {
-  //         urls: 'turn:a.relay.metered.ca:443',
-  //         username: '8c0ea84e9875bf637b95da2d',
-  //         credential: '5/PFNq4oWIIWGtdT',
-  //       },
-  //       {
-  //         urls: 'turn:a.relay.metered.ca:443?transport=tcp',
-  //         username: '8c0ea84e9875bf637b95da2d',
-  //         credential: '5/PFNq4oWIIWGtdT',
-  //       },
-  //     ],
+      // iceServers: [
+      //   {
+      //     urls: 'stun:stun.relay.metered.ca:80',
+      //   },
+      //   {
+      //     urls: 'turn:a.relay.metered.ca:80',
+      //     username: '8c0ea84e9875bf637b95da2d',
+      //     credential: '5/PFNq4oWIIWGtdT',
+      //   },
+      //   {
+      //     urls: 'turn:a.relay.metered.ca:80?transport=tcp',
+      //     username: '8c0ea84e9875bf637b95da2d',
+      //     credential: '5/PFNq4oWIIWGtdT',
+      //   },
+      //   {
+      //     urls: 'turn:a.relay.metered.ca:443',
+      //     username: '8c0ea84e9875bf637b95da2d',
+      //     credential: '5/PFNq4oWIIWGtdT',
+      //   },
+      //   {
+      //     urls: 'turn:a.relay.metered.ca:443?transport=tcp',
+      //     username: '8c0ea84e9875bf637b95da2d',
+      //     credential: '5/PFNq4oWIIWGtdT',
+      //   },
+      // ],
   //   }),
   // );
 
-  const peerConnection = useRef(null);
-
-  useLayoutEffect(() => {
-    // function generateTemporaryCredentials(userId, secret) {
-    //   const timestamp = Math.floor(Date.now() / 1000); // Получаем Unix timestamp
-    //   const username = `${timestamp}:${userId}`; // Формируем имя пользователя
-
-    //   // Создаем HMAC с использованием SHA-256
-    //   const password = CryptoJS.HmacSHA256(username, secret).toString(
-    //     CryptoJS.enc.Base64,
-    //   ); // Получаем пароль в формате base64
-
-    //   return {username, password};
-    // }
-    // // Пример использования
-    // const userId = 'exampleUserId';
-    // const secret = 'your_auth_secret'; // Замените на ваш static-auth-secret
-    // const credentials = generateTemporaryCredentials(userId, secret);
-
-    // console.log('Username:', credentials.username);
-    // console.log('Password:', credentials.password);
-
-    peerConnection.current = new RTCPeerConnection({
+  const peerConnection = useRef(
+    new RTCPeerConnection({
       iceServers: [
         {
           // urls: 'stun:oiweida.ru:3478',
           urls: 'stun:stun.l.google.com:19302',
         },
         {
-          // urls: 'turn:oiweida.ru:3478',
           urls: 'turn:89.221.60.157:3478',
-          username: 'username',
-          credential: 'password',
+          username: 'andrew',
+          credential: 'kapustin',
         },
       ],
-    });
+    }),
+  );
+
+  useLayoutEffect(() => {
+    // function generateTemporaryCredentials(userId, secret) {
+    //   const timestamp = Math.floor(Date.now() / 1000); // Получаем Unix timestamp
+    //   const username = `${timestamp}:${userId}`; // Формируем имя пользователя
+    //   // Создаем HMAC с использованием SHA-256
+    //   const password = CryptoJS.HmacSHA256(username, secret).toString(
+    //     CryptoJS.enc.Base64,
+    //   ); // Получаем пароль в формате base64
+    //   return {username, password};
+    // }
+    // // Пример использования
+    // const userId = 'exampleUserId';
+    // const secret = 'your_auth_secret'; // Замените на ваш static-auth-secret
+    // const credentials = generateTemporaryCredentials(userId, secret);
+    // console.log('Username:', credentials.username);
+    // console.log('Password:', credentials.password);
+    // peerConnection.current =
   }, []);
 
   const [localMicOn, setlocalMicOn] = useState(true);
