@@ -37,81 +37,60 @@ export default function App({}) {
 
   const [type, setType] = useState('JOIN');
 
-  const [callerId] = useState(
-    Math.floor(100000 + Math.random() * 900000).toString(),
-  );
+  const [callerId] = useState(Math.floor(10 + Math.random() * 90).toString());
   const otherUserId = useRef(null);
 
-  const socket = SocketIOClient('https://oiweida.ru', {
+  const socket = SocketIOClient('http://79.174.80.48:3001', {
     query: {
       callerId,
     },
   });
 
-  // const peerConnection = useRef(
-  //   new RTCPeerConnection({
-      // iceServers: [
-      //   {
-      //     urls: 'stun:stun.relay.metered.ca:80',
-      //   },
-      //   {
-      //     urls: 'turn:a.relay.metered.ca:80',
-      //     username: '8c0ea84e9875bf637b95da2d',
-      //     credential: '5/PFNq4oWIIWGtdT',
-      //   },
-      //   {
-      //     urls: 'turn:a.relay.metered.ca:80?transport=tcp',
-      //     username: '8c0ea84e9875bf637b95da2d',
-      //     credential: '5/PFNq4oWIIWGtdT',
-      //   },
-      //   {
-      //     urls: 'turn:a.relay.metered.ca:443',
-      //     username: '8c0ea84e9875bf637b95da2d',
-      //     credential: '5/PFNq4oWIIWGtdT',
-      //   },
-      //   {
-      //     urls: 'turn:a.relay.metered.ca:443?transport=tcp',
-      //     username: '8c0ea84e9875bf637b95da2d',
-      //     credential: '5/PFNq4oWIIWGtdT',
-      //   },
-      // ],
-  //   }),
-  // );
-
   const peerConnection = useRef(
     new RTCPeerConnection({
       iceServers: [
         {
-          // urls: 'stun:oiweida.ru:3478',
-          urls: 'stun:stun.l.google.com:19302',
+          urls: 'stun:stun.relay.metered.ca:80',
         },
         {
-          urls: 'turn:89.221.60.157:3478',
-          username: 'andrew',
-          credential: 'kapustin',
+          urls: 'turn:a.relay.metered.ca:80',
+          username: '8c0ea84e9875bf637b95da2d',
+          credential: '5/PFNq4oWIIWGtdT',
+        },
+        {
+          urls: 'turn:a.relay.metered.ca:80?transport=tcp',
+          username: '8c0ea84e9875bf637b95da2d',
+          credential: '5/PFNq4oWIIWGtdT',
+        },
+        {
+          urls: 'turn:a.relay.metered.ca:443',
+          username: '8c0ea84e9875bf637b95da2d',
+          credential: '5/PFNq4oWIIWGtdT',
+        },
+        {
+          urls: 'turn:a.relay.metered.ca:443?transport=tcp',
+          username: '8c0ea84e9875bf637b95da2d',
+          credential: '5/PFNq4oWIIWGtdT',
         },
       ],
     }),
   );
 
-  useLayoutEffect(() => {
-    // function generateTemporaryCredentials(userId, secret) {
-    //   const timestamp = Math.floor(Date.now() / 1000); // Получаем Unix timestamp
-    //   const username = `${timestamp}:${userId}`; // Формируем имя пользователя
-    //   // Создаем HMAC с использованием SHA-256
-    //   const password = CryptoJS.HmacSHA256(username, secret).toString(
-    //     CryptoJS.enc.Base64,
-    //   ); // Получаем пароль в формате base64
-    //   return {username, password};
-    // }
-    // // Пример использования
-    // const userId = 'exampleUserId';
-    // const secret = 'your_auth_secret'; // Замените на ваш static-auth-secret
-    // const credentials = generateTemporaryCredentials(userId, secret);
-    // console.log('Username:', credentials.username);
-    // console.log('Password:', credentials.password);
-    // peerConnection.current =
-  }, []);
+  // const peerConnection = useRef(
+  //   new RTCPeerConnection({
+  //     iceServers: [
+  //       {
+  //         // urls: 'stun:oiweida.ru:3478',
+  //         urls: 'stun:79.174.80.48:3478',
+  //       },
+  //       {
+  //         urls: 'turn:79.174.80.48:3478',
+  //         username: 'andrew',
+  //         credential: 'kapustin',
+  //       },
+  //     ],
+  //   }),
+  // );
 
   const [localMicOn, setlocalMicOn] = useState(true);
 
@@ -164,16 +143,12 @@ export default function App({}) {
   // );
 
   useEffect(() => {
-    console.log('mediaStream');
-
     if (peerConnection.current && localStream) {
       localStream.getTracks().forEach(track => {
         peerConnection.current.addTrack(track, localStream);
       });
     }
   }, [peerConnection.current, localStream]);
-
-  console.log('dadada', peerConnection.current);
 
   peerConnection.current?.addEventListener(
     'iceconnectionstatechange',
@@ -193,7 +168,6 @@ export default function App({}) {
       }
     },
   );
-  console.log('mediaStream', peerConnection.current);
 
   peerConnection.current?.addEventListener('connectionstatechange', event => {
     switch (peerConnection.current?.connectionState) {
@@ -216,8 +190,6 @@ export default function App({}) {
     socket.on('callAnswered', data => {
       remoteRTCMessage.current = data.rtcMessage;
 
-      console.log('data.rtcMessage;', data.rtcMessage);
-
       peerConnection.current.setRemoteDescription(
         new RTCSessionDescription(remoteRTCMessage.current),
       );
@@ -226,12 +198,6 @@ export default function App({}) {
 
     socket.on('ICEcandidate', async data => {
       let message = data.rtcMessage;
-
-      console.log('lololoo', callerId, {
-        candidate: message.candidate,
-        sdpMid: message.id,
-        sdpMLineIndex: message.label,
-      });
 
       if (peerConnection.current) {
         peerConnection?.current
@@ -283,13 +249,10 @@ export default function App({}) {
     })();
 
     peerConnection.current?.addEventListener('addstream', event => {
-      console.log('fafafafafa');
       setRemoteStream(event.stream);
     });
 
     peerConnection.current?.addEventListener('icecandidate', event => {
-      console.log('313131313131');
-
       if (!event.candidate) {
         console.log('END');
         return;
@@ -598,18 +561,10 @@ export default function App({}) {
   }
 
   function leave() {
-    console.log(callerId, peerConnection.current);
-
     peerConnection.current.close();
     setlocalStream(null);
     setType('JOIN');
   }
-
-  useEffect(() => {
-    // console.log(callerId, peerConnection.current);
-
-    console.log('lflflflflflflf', remoteStream);
-  }, []);
 
   const WebrtcRoomScreen = () => {
     return (
