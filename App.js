@@ -7,6 +7,7 @@ import {
   View,
   Text,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
 import TextInputContainer from './components/TextInputContainer';
 import SocketIOClient from 'socket.io-client';
@@ -40,57 +41,57 @@ export default function App({}) {
   const [callerId] = useState(Math.floor(10 + Math.random() * 90).toString());
   const otherUserId = useRef(null);
 
-  const socket = SocketIOClient('http://79.174.80.48:3001', {
+  const socket = SocketIOClient('http://videotradedev1.ru:3001', {
     query: {
       callerId,
     },
   });
 
-  const peerConnection = useRef(
-    new RTCPeerConnection({
-      iceServers: [
-        {
-          urls: 'stun:stun.relay.metered.ca:80',
-        },
-        {
-          urls: 'turn:a.relay.metered.ca:80',
-          username: 'a06fa94e47b5b576b7e2023d',
-          credential: 'kEj9B+JnstWL7jTI',
-        },
-        {
-          urls: 'turn:a.relay.metered.ca:80?transport=tcp',
-          username: 'a06fa94e47b5b576b7e2023d',
-          credential: 'kEj9B+JnstWL7jTI',
-        },
-        {
-          urls: 'turn:a.relay.metered.ca:443',
-          username: 'a06fa94e47b5b576b7e2023d',
-          credential: 'kEj9B+JnstWL7jTI',
-        },
-        {
-          urls: 'turn:a.relay.metered.ca:443?transport=tcp',
-          username: 'a06fa94e47b5b576b7e2023d',
-          credential: 'kEj9B+JnstWL7jTI',
-        },
-      ],
-    }),
-  );
-
   // const peerConnection = useRef(
   //   new RTCPeerConnection({
   //     iceServers: [
   //       {
-  //         // urls: 'stun:oiweida.ru:3478',
-  //         urls: 'stun:79.174.80.48:3478',
+  //         urls: 'stun:stun.relay.metered.ca:80',
   //       },
   //       {
-  //         urls: 'turn:79.174.80.48:3478',
-  //         username: 'andrew',
-  //         credential: 'kapustin',
+  //         urls: 'turn:a.relay.metered.ca:80',
+  //         username: 'a06fa94e47b5b576b7e2023d',
+  //         credential: 'kEj9B+JnstWL7jTI',
+  //       },
+  //       {
+  //         urls: 'turn:a.relay.metered.ca:80?transport=tcp',
+  //         username: 'a06fa94e47b5b576b7e2023d',
+  //         credential: 'kEj9B+JnstWL7jTI',
+  //       },
+  //       {
+  //         urls: 'turn:a.relay.metered.ca:443',
+  //         username: 'a06fa94e47b5b576b7e2023d',
+  //         credential: 'kEj9B+JnstWL7jTI',
+  //       },
+  //       {
+  //         urls: 'turn:a.relay.metered.ca:443?transport=tcp',
+  //         username: 'a06fa94e47b5b576b7e2023d',
+  //         credential: 'kEj9B+JnstWL7jTI',
   //       },
   //     ],
   //   }),
   // );
+
+  const peerConnection = useRef(
+    new RTCPeerConnection({
+      iceServers: [
+        {
+          // urls: 'stun:oiweida.ru:3478',
+          urls: 'stun:79.174.80.48:3478',
+        },
+        {
+          urls: 'turn:79.174.80.48:3478',
+          username: 'andrew',
+          credential: 'kapustin',
+        },
+      ],
+    }),
+  );
 
   const [localMicOn, setlocalMicOn] = useState(true);
 
@@ -181,6 +182,58 @@ export default function App({}) {
   let remoteRTCMessage = useRef(null);
 
   useEffect(() => {
+    // Alert.alert('dadada', 'DADADADA', [
+    //   {
+    //     text: 'Cancel',
+    //     onPress: () => console.log('Cancel Pressed'),
+    //     style: 'cancel',
+    //   },
+    //   {text: 'OK', onPress: () => console.log('OK Pressed')},
+    // ]);
+
+    // console.log('fafafafafafafa');
+
+    // (async () => {
+    //   const response = await fetch(
+    //     'http://videotradedev1.ru:3001/api/auth/register',
+    //     {
+    //       method: 'POST',
+    //       headers: {
+    //         'Content-Type': 'application/json;charset=utf-8',
+    //       },
+    //       body: JSON.stringify({
+    //         first_name: 'Andrew',
+    //         phone: '+79654334143',
+    //         second_name: 'Chel',
+    //         last_name: 'Vladimirovich',
+    //         login: 'asdasd3',
+    //         hash: 'asdasdasd',
+    //         cases: [
+    //           {
+    //             question: 'Год рождения',
+    //             answer: '2002',
+    //           },
+    //           {
+    //             question: 'Первый питомец',
+    //             answer: 'кот',
+    //           },
+    //         ],
+    //       }),
+    //     },
+    //   );
+
+    //   const op = await response.json();
+
+    //   Alert.alert('dadada', JSON.stringify(op), [
+    //     {
+    //       text: 'Cancel',
+    //       onPress: () => console.log('Cancel Pressed'),
+    //       style: 'cancel',
+    //     },
+    //     {text: 'OK', onPress: () => console.log('OK Pressed')},
+    //   ]);
+    // })();
+
     socket.on('newCall', data => {
       remoteRTCMessage.current = data.rtcMessage;
       otherUserId.current = data.callerId;
@@ -236,10 +289,10 @@ export default function App({}) {
         try {
           const mediaStream = await mediaDevices.getUserMedia(mediaConstraints);
 
-          // if (isVoiceOnly) {
-          //   let videoTrack = mediaStream.getVideoTracks()[0];
-          //   videoTrack.enabled = false;
-          // }
+          if (isVoiceOnly) {
+            let videoTrack = mediaStream.getVideoTracks()[0];
+            videoTrack.enabled = false;
+          }
 
           setlocalStream(mediaStream);
         } catch (err) {
@@ -575,13 +628,13 @@ export default function App({}) {
           paddingHorizontal: 12,
           paddingVertical: 12,
         }}>
-        {/* {localStream ? (
+        {localStream ? (
           <RTCView
             objectFit={'cover'}
             style={{flex: 1, backgroundColor: '#050A0E'}}
             streamURL={localStream.toURL()}
           />
-        ) : null} */}
+        ) : null}
         {remoteStream ? (
           <RTCView
             objectFit={'cover'}
