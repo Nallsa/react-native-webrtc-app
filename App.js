@@ -37,9 +37,7 @@ export default function App({}) {
 
   const [type, setType] = useState('JOIN');
 
-  const [callerId] = useState(
-    Math.floor(100000 + Math.random() * 900000).toString(),
-  );
+  const [callerId] = useState(Math.floor(10 + Math.random() * 90).toString());
   const otherUserId = useRef(null);
 
   const socket = SocketIOClient('https://oiweida.ru', {
@@ -50,49 +48,65 @@ export default function App({}) {
 
   // const peerConnection = useRef(
   //   new RTCPeerConnection({
-      // iceServers: [
-      //   {
-      //     urls: 'stun:stun.relay.metered.ca:80',
-      //   },
-      //   {
-      //     urls: 'turn:a.relay.metered.ca:80',
-      //     username: '8c0ea84e9875bf637b95da2d',
-      //     credential: '5/PFNq4oWIIWGtdT',
-      //   },
-      //   {
-      //     urls: 'turn:a.relay.metered.ca:80?transport=tcp',
-      //     username: '8c0ea84e9875bf637b95da2d',
-      //     credential: '5/PFNq4oWIIWGtdT',
-      //   },
-      //   {
-      //     urls: 'turn:a.relay.metered.ca:443',
-      //     username: '8c0ea84e9875bf637b95da2d',
-      //     credential: '5/PFNq4oWIIWGtdT',
-      //   },
-      //   {
-      //     urls: 'turn:a.relay.metered.ca:443?transport=tcp',
-      //     username: '8c0ea84e9875bf637b95da2d',
-      //     credential: '5/PFNq4oWIIWGtdT',
-      //   },
-      // ],
+  // iceServers: [
+  //   {
+  //     urls: 'stun:stun.relay.metered.ca:80',
+  //   },
+  //   {
+  //     urls: 'turn:a.relay.metered.ca:80',
+  //     username: '8c0ea84e9875bf637b95da2d',
+  //     credential: '5/PFNq4oWIIWGtdT',
+  //   },
+  //   {
+  //     urls: 'turn:a.relay.metered.ca:80?transport=tcp',
+  //     username: '8c0ea84e9875bf637b95da2d',
+  //     credential: '5/PFNq4oWIIWGtdT',
+  //   },
+  //   {
+  //     urls: 'turn:a.relay.metered.ca:443',
+  //     username: '8c0ea84e9875bf637b95da2d',
+  //     credential: '5/PFNq4oWIIWGtdT',
+  //   },
+  //   {
+  //     urls: 'turn:a.relay.metered.ca:443?transport=tcp',
+  //     username: '8c0ea84e9875bf637b95da2d',
+  //     credential: '5/PFNq4oWIIWGtdT',
+  //   },
+  // ],
   //   }),
   // );
 
-  const peerConnection = useRef(
-    new RTCPeerConnection({
-      iceServers: [
-        {
-          // urls: 'stun:oiweida.ru:3478',
-          urls: 'stun:stun.l.google.com:19302',
-        },
-        {
-          urls: 'turn:89.221.60.157:3478',
-          username: 'andrew',
-          credential: 'kapustin',
-        },
-      ],
-    }),
-  );
+  // const peerConnection = useRef(
+  //   new RTCPeerConnection({
+  //     iceServers: [
+  //       {
+  //         // urls: 'stun:oiweida.ru:3478',
+  //         urls: 'stun:stun.l.google.com:19302',
+  //       },
+  //       {
+  //         urls: 'turn:79.174.80.48:3478',
+  //         username: 'andrew',
+  //         credential: 'kapustin',
+  //       },
+  //     ],
+  //   }),
+  // );
+
+    const peerConnection = useRef(
+      new RTCPeerConnection({
+        iceServers: [
+          {
+            // urls: 'stun:oiweida.ru:3478',
+            urls: 'stun:stun.l.google.com:19302',
+          },
+          {
+            urls: 'turn:89.221.60.157:3478',
+            username: 'andrew',
+            credential: 'kapustin',
+          },
+        ],
+      }),
+    );
 
   useLayoutEffect(() => {
     // function generateTemporaryCredentials(userId, secret) {
@@ -270,10 +284,10 @@ export default function App({}) {
         try {
           const mediaStream = await mediaDevices.getUserMedia(mediaConstraints);
 
-          // if (isVoiceOnly) {
-          //   let videoTrack = mediaStream.getVideoTracks()[0];
-          //   videoTrack.enabled = false;
-          // }
+          if (isVoiceOnly) {
+            let videoTrack = mediaStream.getVideoTracks()[0];
+            videoTrack.enabled = false;
+          }
 
           setlocalStream(mediaStream);
         } catch (err) {
@@ -620,13 +634,13 @@ export default function App({}) {
           paddingHorizontal: 12,
           paddingVertical: 12,
         }}>
-        {/* {localStream ? (
+        {localStream ? (
           <RTCView
             objectFit={'cover'}
             style={{flex: 1, backgroundColor: '#050A0E'}}
             streamURL={localStream.toURL()}
           />
-        ) : null} */}
+        ) : null}
         {remoteStream ? (
           <RTCView
             objectFit={'cover'}
