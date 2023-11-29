@@ -41,7 +41,7 @@ export default function App({}) {
   const [callerId] = useState(Math.floor(10 + Math.random() * 90).toString());
   const otherUserId = useRef(null);
 
-  const socket = SocketIOClient('http://videotradedev1.ru:3001', {
+  const socket = SocketIOClient('https://oiweida.ru', {
     query: {
       callerId,
     },
@@ -80,12 +80,15 @@ export default function App({}) {
   const peerConnection = useRef(
     new RTCPeerConnection({
       iceServers: [
+        // {
+        //   // urls: 'stun:oiweida.ru:3478',
+        //   // urls: 'stun:79.174.80.48:3478',
+        // },
         {
-          // urls: 'stun:oiweida.ru:3478',
-          urls: 'stun:79.174.80.48:3478',
+          urls: 'stun:stun.l.google.com:19302',
         },
         {
-          urls: 'turn:79.174.80.48:3478',
+          urls: 'turn:videotradedev1.ru:3478',
           username: 'andrew',
           credential: 'kapustin',
         },
