@@ -41,7 +41,7 @@ export default function App({}) {
   const [callerId] = useState(Math.floor(10 + Math.random() * 90).toString());
   const otherUserId = useRef(null);
 
-  const socket = SocketIOClient('https://oiweida.ru', {
+  const socket = SocketIOClient('https://videotradedev.ru', {
     query: {
       callerId,
     },
@@ -82,16 +82,26 @@ export default function App({}) {
       iceServers: [
         // {
         //   // urls: 'stun:oiweida.ru:3478',
-        //   // urls: 'stun:79.174.80.48:3478',
+        //   urls: 'stun:89.221.60.156:3478',
         // },
         {
           urls: 'stun:stun.l.google.com:19302',
         },
         {
-          urls: 'turn:videotradedev1.ru:3478',
+          urls: 'turn:89.221.60.156:3478',
           username: 'andrew',
           credential: 'kapustin',
         },
+        // {
+        //   urls: 'turn:videotradedev.ru?transport=udp',
+        //   username: 'andrew',
+        //   credential: 'kapustin',
+        // },
+        // {
+        //   urls: 'turn:89.221.60.156:3478?transport=tcp',
+        //   username: 'andrew',
+        //   credential: 'kapustin',
+        // },
       ],
     }),
   );
@@ -99,52 +109,6 @@ export default function App({}) {
   const [localMicOn, setlocalMicOn] = useState(true);
 
   const [localWebcamOn, setlocalWebcamOn] = useState(true);
-
-  // const peerConnection = useRef(
-  //   new RTCPeerConnection({
-  //     iceServers: [
-  //       {
-  //         urls: 'stun:stun.l.google.com:19302',
-  //       },
-  //       {
-  //         urls: 'stun:stun1.l.google.com:19302',
-  //       },
-  //       {
-  //         urls: 'stun:stun2.l.google.com:19302',
-  //       },
-  //     ],
-  //   }),
-  // );
-
-  // const peerConnection = useRef(
-  //   new RTCPeerConnection({
-  //     iceServers: [
-  //       {
-  //         urls: 'stun:stun.relay.metered.ca:80',
-  //       },
-  //       {
-  //         urls: 'turn:a.relay.metered.ca:80',
-  //         username: 'a06fa94e47b5b576b7e2023d',
-  //         credential: 'kEj9B+JnstWL7jTI',
-  //       },
-  //       {
-  //         urls: 'turn:a.relay.metered.ca:80?transport=tcp',
-  //         username: 'a06fa94e47b5b576b7e2023d',
-  //         credential: 'kEj9B+JnstWL7jTI',
-  //       },
-  //       {
-  //         urls: 'turn:a.relay.metered.ca:443',
-  //         username: 'a06fa94e47b5b576b7e2023d',
-  //         credential: 'kEj9B+JnstWL7jTI',
-  //       },
-  //       {
-  //         urls: 'turn:a.relay.metered.ca:443?transport=tcp',
-  //         username: 'a06fa94e47b5b576b7e2023d',
-  //         credential: 'kEj9B+JnstWL7jTI',
-  //       },
-  //     ],
-  //   }),
-  // );
 
   useEffect(() => {
     if (peerConnection.current && localStream) {
@@ -185,58 +149,6 @@ export default function App({}) {
   let remoteRTCMessage = useRef(null);
 
   useEffect(() => {
-    // Alert.alert('dadada', 'DADADADA', [
-    //   {
-    //     text: 'Cancel',
-    //     onPress: () => console.log('Cancel Pressed'),
-    //     style: 'cancel',
-    //   },
-    //   {text: 'OK', onPress: () => console.log('OK Pressed')},
-    // ]);
-
-    // console.log('fafafafafafafa');
-
-    // (async () => {
-    //   const response = await fetch(
-    //     'http://videotradedev1.ru:3001/api/auth/register',
-    //     {
-    //       method: 'POST',
-    //       headers: {
-    //         'Content-Type': 'application/json;charset=utf-8',
-    //       },
-    //       body: JSON.stringify({
-    //         first_name: 'Andrew',
-    //         phone: '+79654334143',
-    //         second_name: 'Chel',
-    //         last_name: 'Vladimirovich',
-    //         login: 'asdasd3',
-    //         hash: 'asdasdasd',
-    //         cases: [
-    //           {
-    //             question: 'Год рождения',
-    //             answer: '2002',
-    //           },
-    //           {
-    //             question: 'Первый питомец',
-    //             answer: 'кот',
-    //           },
-    //         ],
-    //       }),
-    //     },
-    //   );
-
-    //   const op = await response.json();
-
-    //   Alert.alert('dadada', JSON.stringify(op), [
-    //     {
-    //       text: 'Cancel',
-    //       onPress: () => console.log('Cancel Pressed'),
-    //       style: 'cancel',
-    //     },
-    //     {text: 'OK', onPress: () => console.log('OK Pressed')},
-    //   ]);
-    // })();
-
     socket.on('newCall', data => {
       remoteRTCMessage.current = data.rtcMessage;
       otherUserId.current = data.callerId;
@@ -309,10 +221,12 @@ export default function App({}) {
     });
 
     peerConnection.current?.addEventListener('icecandidate', event => {
-      if (!event.candidate) {
-        console.log('END');
-        return;
-      }
+      console.log('END', callerId, event.candidate);
+
+      // if (!event.candidate) {
+      //   console.log('END', event.candidate);
+      //   return;
+      // }
       if (event.candidate) {
         sendICEcandidate({
           calleeId: otherUserId.current,
